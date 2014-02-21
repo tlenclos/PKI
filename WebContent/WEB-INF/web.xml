@@ -1,0 +1,12 @@
+<web-app>
+	<servlet>
+		<servlet-name>PKI</servlet-name>
+		<servlet-class>
+			pki.Register
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PKI</servlet-name>
+		<url-pattern>/api</url-pattern>
+	</servlet-mapping>
+</web-app>
