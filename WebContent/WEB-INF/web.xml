@@ -1,12 +1,14 @@
 <web-app>
 	<servlet>
-		<servlet-name>PKI</servlet-name>
+		<servlet-name>Register</servlet-name>
 		<servlet-class>
-			pki.Register
+			pki.servlets.Register
 		</servlet-class>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>PKI</servlet-name>
-		<url-pattern>/api</url-pattern>
-	</servlet-mapping>
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>
+			pki.servlets.Login
+		</servlet-class>
+	</servlet>
 </web-app>

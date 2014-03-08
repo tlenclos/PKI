@@ -14,7 +14,6 @@ public class User extends Model {
 	}
 	
 	public Boolean validate() throws Exception {
-		System.out.println(this.email);
 		return 
 			this.validateEmail(this.email)
 			&& this.validatePassword(password, password)
