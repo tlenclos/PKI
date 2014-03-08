@@ -3,12 +3,13 @@ package pki.servlets;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pki.User;
 
-
+@WebServlet("/api/login")
 public class Login extends javax.servlet.http.HttpServlet {
 
 	private static final long serialVersionUID = 1L;

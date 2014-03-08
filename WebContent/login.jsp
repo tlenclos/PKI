@@ -5,7 +5,7 @@
    <jsp:attribute name="title">Register</jsp:attribute>
     
     <jsp:body>
-	<form role="form"method="post" action="api/login">
+	<form role="form"method="post" action="/PKI/api/login">
 		<legend>Login</legend>
 		
         <div class="form-group">

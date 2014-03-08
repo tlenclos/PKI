@@ -3,7 +3,7 @@
 
 <html>
 <header>
-	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" href="/PKI/bootstrap.min.css">
 	<title><jsp:invoke fragment="title"/></title>
 </header>
   <body>
@@ -17,8 +17,8 @@
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li class="active"><a href="register.jsp">Register</a></li>
-	        <li class="active"><a href="login.jsp">Login</a></li>
+	        <li class="active"><a href="/PKI/api/register">Register</a></li>
+	        <li class="active"><a href="/PKI/api/login">Login</a></li>
 	      </ul>
 	      
 	    </div><!-- /.navbar-collapse -->

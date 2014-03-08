@@ -6,7 +6,7 @@
    <jsp:attribute name="title">Register</jsp:attribute>
     
     <jsp:body>
-	<form role="form"method="post" action="api/register">
+	<form role="form"method="post" action="/PKI/api/register">
 		<legend>Register</legend>
 		<c:if test="${not empty errors}">
 			<div class="alert alert-dismissable alert-warning">${errors}</div>
