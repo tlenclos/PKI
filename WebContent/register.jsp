@@ -12,9 +12,13 @@
 			<div class="alert alert-dismissable alert-warning">${errors}</div>
 		</c:if>
 		
+		<c:if test="${not empty success}">
+			<div class="alert alert-dismissable alert-success">${success}</div>
+		</c:if>
+		
 		<div class="form-group">
-	        <label for="name">Name <span class="requis">*</span></label>
-	        <input type="text" id="name" name="name" value="${param.name}" size="20" maxlength="20" class="form-control" />
+	        <label for="lastname">Name <span class="requis">*</span></label>
+	        <input type="text" id="lastname" name="lastname" value="${param.lastname}" size="20" maxlength="20" class="form-control" />
 	    </div>
 	       
         <div class="form-group">
