@@ -6,4 +6,7 @@ public class Config {
 	public static String dbUrl = "jdbc:mysql://localhost/pki";
 	public static String dbUsername = "root";
 	public static String dbPassword = "";
+	public static final String ATT_ERRORS  = "errors";
+	public static final String ATT_SUCCESS  = "success";
+	public static final String ATT_SESSION_USER = "userSession";
 }

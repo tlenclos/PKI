@@ -6,7 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import pki.Config;
+import pki.Database;
 import pki.User;
 
 @WebServlet("/api/login")
@@ -16,12 +19,24 @@ public class Login extends javax.servlet.http.HttpServlet {
 	private static final String VIEW = "/login.jsp";
 	private static final String FIELD_EMAIL = "email";
 	private static final String FIELD_PASSWORD = "password";
-	private static final String ATT_ERRORS  = "errors";
 	
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
+			throws ServletException, IOException 
+	{
+		if (request.getMethod() == "POST") {
+			HttpSession session = request.getSession();
+			User tryLoginUser = Database.loginUser(request.getParameter(FIELD_EMAIL), request.getParameter(FIELD_PASSWORD));
+			
+			if (tryLoginUser != null) {
+				session.setAttribute( Config.ATT_SESSION_USER, tryLoginUser);
+				response.sendRedirect( request.getContextPath() + "/secure/secure.jsp" );
+			} else {
+				request.setAttribute( Config.ATT_ERRORS, "Bad credentials");
+				this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
+			}
+		} else {
+			this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
+		}
 	}
 }

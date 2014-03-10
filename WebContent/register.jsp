@@ -8,13 +8,6 @@
     <jsp:body>
 	<form role="form"method="post" action="/PKI/api/register">
 		<legend>Register</legend>
-		<c:if test="${not empty errors}">
-			<div class="alert alert-dismissable alert-warning">${errors}</div>
-		</c:if>
-		
-		<c:if test="${not empty success}">
-			<div class="alert alert-dismissable alert-success">${success}</div>
-		</c:if>
 		
 		<div class="form-group">
 	        <label for="lastname">Name <span class="requis">*</span></label>

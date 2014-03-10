@@ -37,4 +37,11 @@ public class Database {
 		return connexion;
 	}
 	
+	public static User loginUser(String email, String password) {
+		User tryLoginUser = new User(null, null, email, password);
+		// TODO fetch user in DB and validate
+		
+		return tryLoginUser;
+	}
+	
 }

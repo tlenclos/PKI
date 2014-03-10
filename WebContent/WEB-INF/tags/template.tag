@@ -1,5 +1,6 @@
 <%@tag description="Layout" pageEncoding="UTF-8"%>
 <%@attribute name="title" fragment="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <header>
@@ -11,7 +12,7 @@
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
-	      <a class="navbar-brand" href="index.jsp">PKI</a>
+	      <a class="navbar-brand" href="/PKI/index.jsp">PKI</a>
 	    </div>
 	
 	    <!-- Collect the nav links, forms, and other content for toggling -->
@@ -26,7 +27,14 @@
 	</nav>
 
     <div class="container">
-      <jsp:doBody/>
+		<c:if test="${not empty errors}">
+			<div class="alert alert-dismissable alert-warning">${errors}</div>
+		</c:if>
+		
+		<c:if test="${not empty success}">
+			<div class="alert alert-dismissable alert-success">${success}</div>
+		</c:if>
+		<jsp:doBody/>
     </div>
   </body>
 </html>

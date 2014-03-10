@@ -1,4 +1,5 @@
 <web-app>
+    
 	<servlet>
 		<servlet-name>Register</servlet-name>
 		<servlet-class>
@@ -11,4 +12,14 @@
 			pki.servlets.Login
 		</servlet-class>
 	</servlet>
+	
+	<filter>
+		<filter-name>AuthFilter</filter-name>
+		<filter-class>pki.filters.AuthFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthFilter</filter-name>
+		<url-pattern>/secure/*</url-pattern>
+	</filter-mapping>
+	
 </web-app>
