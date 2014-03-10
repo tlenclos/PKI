@@ -16,12 +16,26 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 
+import pki.utilities.CertificateWriters;
 import pki.utilities.JCESigner;
 
 public class CA
 {
+	private X509Certificate _certificate;
+	private PrivateKey _privateKey;
+	private static CA _instance;
+	
+	// singleton
+	public CA getInstance()
+	{
+		if(_instance == null)
+			_instance = new CA();
+		
+		return _instance;
+	}
+	
 	// self-signed certificate
-	public static X509Certificate generateSelfSignedCACertificate()
+	public void generateSelfSignedCACertificate()
 	{
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		
@@ -46,12 +60,47 @@ public class CA
 			CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 			X509Certificate certificate = (X509Certificate)certificateFactory.generateCertificate(new ByteArrayInputStream(certBytes));
 			
-			return certificate;
+			_certificate = certificate;
+			_privateKey = privateKey;
+			
+			this.saveCertificateAndPrivateKey();
 		    
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	    
-	    return null;
-	}	
+	}
+	
+	public String toPem()
+	{
+		if(_certificate != null)
+			return CertificateWriters.getPemString(_certificate);
+		
+		return null;
+	}
+	
+	// private
+	private CA()
+	{
+		this.loadCertificateAndPrivateKey();
+	}
+	
+	private void saveCertificateAndPrivateKey()
+	{
+		if(_certificate != null)
+		{
+			// need to store certificate!		
+		}
+		
+		if(_privateKey != null)
+		{
+			// need to store privateKey!
+		}
+	}
+	
+	private void loadCertificateAndPrivateKey()
+	{
+		// load from file and keystore
+		_certificate = null;
+		_privateKey = null;
+	}
 }
