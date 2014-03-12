@@ -10,12 +10,12 @@
 		
         <div class="form-group">
 	        <label for="email">Email <span class="requis">*</span></label>
-	        <input type="email" id="email" name="email" value="" size="20" maxlength="60" class="form-control" />
+	        <input type="email" id="email" name="email" value="${param.email}" size="20" maxlength="60" class="form-control" />
 	    </div>
 	             
         <div class="form-group">
 	        <label for="password">Password <span class="requis">*</span></label>
-	        <input type="password" id="password" name="password" value="" size="20" maxlength="60" class="form-control" />
+	        <input type="password" id="password" name="password" value="${param.password}" size="20" maxlength="60" class="form-control" />
 	    </div>
 	                        
 	    <input type="submit" value="Valider"  />

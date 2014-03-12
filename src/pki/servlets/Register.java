@@ -43,7 +43,7 @@ public class Register extends javax.servlet.http.HttpServlet {
 	        	
 	    		Connection dbCon = Database.getConnection();
 	    		PreparedStatement statement = (PreparedStatement) dbCon.prepareStatement(
-    				"INSERT INTO users (email, password, firstname, lastname) VALUES ('?', MD5('?'), '?', '?');"
+    				"INSERT INTO users (email, password, firstname, lastname) VALUES (?, MD5(?), ?, ?);"
 				);
 	    		
 	    		statement.setString(1, email);

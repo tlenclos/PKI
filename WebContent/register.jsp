@@ -10,7 +10,7 @@
 		<legend>Register</legend>
 		
 		<div class="form-group">
-	        <label for="lastname">Name <span class="requis">*</span></label>
+	        <label for="lastname">Lastname <span class="requis">*</span></label>
 	        <input type="text" id="lastname" name="lastname" value="${param.lastname}" size="20" maxlength="20" class="form-control" />
 	    </div>
 	       
