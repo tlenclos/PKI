@@ -8,8 +8,8 @@
     <h1>PKI</h1>
     
     <ul>
-    	<li><a href="/PKI/api/register">Register</a></li>
-    	<li><a href="/PKI/api/login">Login</a></li>
+    	<li><a href="/PKI/register">Register</a></li>
+    	<li><a href="/PKI/login">Login</a></li>
     </ul>
     </jsp:body>
 </t:template>

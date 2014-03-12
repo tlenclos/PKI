@@ -12,7 +12,7 @@ import pki.Config;
 import pki.Database;
 import pki.User;
 
-@WebServlet("/api/login")
+@WebServlet("/login")
 public class Login extends javax.servlet.http.HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -24,17 +24,21 @@ public class Login extends javax.servlet.http.HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException 
 	{
+		HttpSession session = request.getSession();
+		
 		if (request.getMethod() == "POST") {
-			HttpSession session = request.getSession();
 			User tryLoginUser = Database.loginUser(request.getParameter(FIELD_EMAIL), request.getParameter(FIELD_PASSWORD));
 			
 			if (tryLoginUser != null) {
 				session.setAttribute( Config.ATT_SESSION_USER, tryLoginUser);
-				response.sendRedirect( request.getContextPath() + "/secure/secure.jsp" );
+				response.sendRedirect( request.getContextPath() + "/secure/certificates" );
 			} else {
 				request.setAttribute( Config.ATT_ERRORS, "Bad credentials");
 				this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
 			}
+		} else if (request.getMethod() == "GET" && request.getParameterValues("disconnect") != null) {
+			session.setAttribute( Config.ATT_SESSION_USER, null);
+			this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
 		} else {
 			this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
 		}

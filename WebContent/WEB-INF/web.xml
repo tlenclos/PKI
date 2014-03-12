@@ -12,6 +12,12 @@
 			pki.servlets.Login
 		</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>CertificatesList</servlet-name>
+		<servlet-class>
+			pki.servlets.CertificatesList
+		</servlet-class>
+	</servlet>
 	
 	<filter>
 		<filter-name>AuthFilter</filter-name>

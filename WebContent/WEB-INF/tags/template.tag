@@ -18,8 +18,14 @@
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li class="active"><a href="/PKI/api/register">Register</a></li>
-	        <li class="active"><a href="/PKI/api/login">Login</a></li>
+	      	<c:if test="${not empty userSession}">
+	      		<li><a href="/PKI/secure/certificates">Certificates</a></li>
+	    		<li><a href="/PKI/login?disconnect">Logout</a></li>
+			</c:if>
+			<c:if test="${empty userSession}">
+		        <li><a href="/PKI/register">Register</a></li>
+		        <li><a href="/PKI/login">Login</a></li>
+			</c:if>
 	      </ul>
 	      
 	    </div><!-- /.navbar-collapse -->
