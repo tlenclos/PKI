@@ -1,5 +1,8 @@
 package pki.utilities;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.security.cert.X509Certificate;
 
@@ -34,5 +37,24 @@ public class CertificateWriters
         	}
         }
         return result;
+	}
+	
+	public static boolean WriteToFile(File file, X509Certificate cert)
+	{
+		boolean result = false;
+		String certificatePem = getPemString(cert);
+		if(file.exists())
+			file.delete();
+		
+		try {
+			file.createNewFile();
+			OutputStream os = new ByteArrayOutputStream();
+			FileUtilities.writeStream(os, certificatePem);
+			result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }

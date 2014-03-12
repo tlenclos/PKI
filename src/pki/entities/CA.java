@@ -105,8 +105,13 @@ public class CA
 	
 	private void loadCertificateAndPrivateKey()
 	{
-		// load from file and keystore
+		// load data
 		_certificate = null;
-		_keyPair = null;
+		try{
+			_keyPair = KeypairUtility.LoadKeyPair(CA_DATA_SAVE_PATH, "DSA");
+		}
+		catch (Exception e){
+			_keyPair = null;
+		}
 	}
 }
