@@ -14,7 +14,7 @@ import pki.User;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
-@WebServlet("/api/register")
+@WebServlet("/register")
 public class Register extends javax.servlet.http.HttpServlet {
 
 	private static final long serialVersionUID = 1L;

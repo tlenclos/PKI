@@ -37,9 +37,6 @@ public class Database {
 	public static User loginUser(String email, String password) {
 		User tryLoginUser = new User(null, null, email, password);
 		Connection dbCon = Database.getConnection();
-
-		System.out.println(email);
-		System.out.println(password);
 		
 		try {
 			String sql = "SELECT id, firstname, lastname, email, password FROM users WHERE email = ? AND password = MD5(?)";
@@ -47,7 +44,6 @@ public class Database {
     		statement.setString(1, email);
     		statement.setString(2, password);
     		
-    		System.out.println(statement.toString());
 			ResultSet result = statement.executeQuery();
 	    		
 			while (result.next()) {
