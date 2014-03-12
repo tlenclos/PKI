@@ -18,12 +18,14 @@ import org.bouncycastle.cert.X509v3CertificateBuilder;
 
 import pki.utilities.CertificateWriters;
 import pki.utilities.JCESigner;
+import pki.utilities.KeypairUtility;
 
 public class CA
 {
 	private X509Certificate _certificate;
-	private PrivateKey _privateKey;
+	private KeyPair _keyPair;
 	private static CA _instance;
+	private static final String CA_DATA_SAVE_PATH = "/CA/";
 	
 	// singleton
 	public CA getInstance()
@@ -50,9 +52,9 @@ public class CA
 	    	//generate key (RSA)
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
 			keyPairGenerator.initialize(1024, new SecureRandom());
-		    KeyPair keyPair = keyPairGenerator.generateKeyPair();
-		    PrivateKey privateKey = keyPair.getPrivate();
-		    PublicKey publicKey = keyPair.getPublic();
+		    _keyPair = keyPairGenerator.generateKeyPair();
+		    PrivateKey privateKey = _keyPair.getPrivate();
+		    PublicKey publicKey = _keyPair.getPublic();
 		    
 		    // build
 			X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(issuer), serialNumber, dateOfIssue, dateOfExpiry, new X500Name(issuer), SubjectPublicKeyInfo.getInstance(publicKey.getEncoded()));
@@ -61,7 +63,6 @@ public class CA
 			X509Certificate certificate = (X509Certificate)certificateFactory.generateCertificate(new ByteArrayInputStream(certBytes));
 			
 			_certificate = certificate;
-			_privateKey = privateKey;
 			
 			this.saveCertificateAndPrivateKey();
 		    
@@ -91,9 +92,14 @@ public class CA
 			// need to store certificate!		
 		}
 		
-		if(_privateKey != null)
+		if(_keyPair != null)
 		{
-			// need to store privateKey!
+			try{
+				KeypairUtility.SaveKeyPair(CA_DATA_SAVE_PATH, _keyPair);
+			}
+			catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -101,6 +107,6 @@ public class CA
 	{
 		// load from file and keystore
 		_certificate = null;
-		_privateKey = null;
+		_keyPair = null;
 	}
 }
