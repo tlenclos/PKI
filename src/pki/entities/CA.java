@@ -92,12 +92,14 @@ public class CA
 	{
 		// load data
 		try {
-			_keyPair = KeypairUtility.LoadKeyPair(CA_DATA_SAVE_PATH, "DSA");
+			CertificateGenerator.init();
+			_keyPair = KeypairUtility.LoadKeyPair(CA_DATA_SAVE_PATH, "RSA");
 			_certificate = CertificateReaders.ReadCertificateFromFile(new File(CA_DATA_SAVE_PATH+"cert.pem"));			
 		}
 		catch (Exception e) {
 			_keyPair = null;
 			_certificate = null;
+			e.printStackTrace();
 		}
 		
 		if(_certificate == null)

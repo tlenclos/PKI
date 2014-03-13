@@ -108,10 +108,10 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 				);
 	    		User connectedUser = (User) request.getSession().getAttribute(Config.ATT_SESSION_USER);
 	    		
-	    		statement.setString(1, newCertificate.commonName);
-	    		statement.setString(2, newCertificate.country);
-	    		statement.setString(3, newCertificate.stateprovince);
-	    		statement.setString(4, newCertificate.organization);
+	    		statement.setString(1, newCertificate.getCommonName());
+	    		statement.setString(2, newCertificate.getCountry());
+	    		statement.setString(3, newCertificate.getStateprovince());
+	    		statement.setString(4, newCertificate.getOrganization());
 	    		statement.setInt(5, connectedUser.id);
 	    		statement.setBytes(6, certBytes);
 	    		statement.setBytes(7, publicKeyBytes);

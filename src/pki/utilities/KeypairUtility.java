@@ -9,12 +9,14 @@ import java.io.InputStreamReader;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
+import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 
 public class KeypairUtility {
@@ -74,7 +76,14 @@ public class KeypairUtility {
 		fis.close();
  
 		// Generate KeyPair.
-		KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+		KeyFactory keyFactory = null;
+		try {
+			keyFactory = KeyFactory.getInstance(algorithm,"BC");
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
 				encodedPublicKey);
 		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
@@ -101,7 +110,9 @@ public class KeypairUtility {
 		try{
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA","BC");// ?
 		PemReader pemReader = new PemReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
-		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(bytes);
+		PemObject pemObject = pemReader.readPemObject();
+		pemReader.close();
+		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(pemObject.getContent()); // ? je test mdr
 		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 		
 		return publicKey;
