@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import pki.Config;
 import pki.Database;
+import pki.Model;
 import pki.User;
 
 import com.mysql.jdbc.Connection;
@@ -29,7 +30,7 @@ public class Register extends javax.servlet.http.HttpServlet {
 		throws ServletException, IOException 
 	{
 		
-		if (request.getMethod() == "POST") {
+		if (request.getMethod().equals("POST")) {
 			String firstname = request.getParameter( FIELD_FIRSTNAME );
 			String lastname = request.getParameter( FIELD_LASTNAME );
 			String email = request.getParameter( FIELD_EMAIL );
@@ -39,7 +40,7 @@ public class Register extends javax.servlet.http.HttpServlet {
 	        
 	        try {
 	        	// Validate
-	        	newUser.validate();
+	        	newUser.validate(new Model());
 	        	
 	    		Connection dbCon = Database.getConnection();
 	    		PreparedStatement statement = (PreparedStatement) dbCon.prepareStatement(
