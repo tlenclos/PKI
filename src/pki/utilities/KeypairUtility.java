@@ -1,9 +1,11 @@
 package pki.utilities;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +14,8 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+
+import org.bouncycastle.util.io.pem.PemReader;
 
 public class KeypairUtility {
 	
@@ -40,14 +44,14 @@ public class KeypairUtility {
 		// Store Public Key.
 		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
 				publicKey.getEncoded());
-		FileOutputStream fos = new FileOutputStream(path + "/public.key");
+		FileOutputStream fos = new FileOutputStream(path + "public.key");
 		fos.write(x509EncodedKeySpec.getEncoded());
 		fos.close();
  
 		// Store Private Key.
 		PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
 				privateKey.getEncoded());
-		fos = new FileOutputStream(path + "/private.key");
+		fos = new FileOutputStream(path + "private.key");
 		fos.write(pkcs8EncodedKeySpec.getEncoded());
 		fos.close();
 	}
@@ -56,15 +60,15 @@ public class KeypairUtility {
 			throws IOException, NoSuchAlgorithmException,
 			InvalidKeySpecException {
 		// Read Public Key.
-		File filePublicKey = new File(path + "/public.key");
-		FileInputStream fis = new FileInputStream(path + "/public.key");
+		File filePublicKey = new File(path + "public.key");
+		FileInputStream fis = new FileInputStream(path + "public.key");
 		byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
 		fis.read(encodedPublicKey);
 		fis.close();
  
 		// Read Private Key.
-		File filePrivateKey = new File(path + "/private.key");
-		fis = new FileInputStream(path + "/private.key");
+		File filePrivateKey = new File(path + "private.key");
+		fis = new FileInputStream(path + "private.key");
 		byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
 		fis.read(encodedPrivateKey);
 		fis.close();
@@ -93,8 +97,10 @@ public class KeypairUtility {
 	
 	public static PublicKey getPublicKeyFromEncodedBytes(byte[] bytes)
 	{
+		CertificateGenerator.init();
 		try{
-		KeyFactory keyFactory = KeyFactory.getInstance("DSA");
+		KeyFactory keyFactory = KeyFactory.getInstance("RSA","BC");// ?
+		PemReader pemReader = new PemReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
 		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(bytes);
 		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 		
@@ -102,7 +108,7 @@ public class KeypairUtility {
 		}
 		catch(Exception e)
 		{
-			
+			e.printStackTrace();
 		}
 		
 		return null;

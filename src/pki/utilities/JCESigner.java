@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
+import java.security.Security;
 import java.security.Signature;
 
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -12,6 +13,10 @@ import org.bouncycastle.operator.ContentSigner;
 
 public class JCESigner implements ContentSigner
 {
+	static {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+	}
+	
     private static final AlgorithmIdentifier PKCS1_SHA256_WITH_RSA_OID = new AlgorithmIdentifier(new ASN1ObjectIdentifier("1.2.840.113549.1.1.11"));
 
     private Signature signature;
@@ -23,7 +28,7 @@ public class JCESigner implements ContentSigner
         }
         try {
             this.outputStream = new ByteArrayOutputStream();
-            this.signature = Signature.getInstance(signatureAlgorithm);
+            this.signature = Signature.getInstance(signatureAlgorithm, "BC");
             this.signature.initSign(privateKey);
         } catch (GeneralSecurityException gse) {
             throw new IllegalArgumentException(gse.getMessage());

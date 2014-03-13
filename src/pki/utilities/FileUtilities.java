@@ -2,6 +2,7 @@ package pki.utilities;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,12 +38,11 @@ public class FileUtilities {
 		return content.toString();
 	}
 
-	public static void writeStream(OutputStream outputStream, String content) {
-		PrintWriter printWriter = new PrintWriter(new BufferedOutputStream(outputStream));
-		printWriter.print(content);
-		printWriter.flush();
+	public static void writeStream(FileWriter writer, String content) {
+		
 		try {
-			outputStream.close();
+			writer.write(content);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -2,6 +2,7 @@ package pki.servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.X509Certificate;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -20,6 +21,8 @@ import pki.Certificate;
 import pki.Config;
 import pki.Database;
 import pki.User;
+import pki.entities.RA;
+import pki.utilities.CertificateWriters;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -65,6 +68,7 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 		} else if (request.getMethod() == "POST") { // Create
 			
 			Certificate newCertificate = new Certificate();
+			byte[] publicKeyBytes = null;
 			
 			try {
 		        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -83,8 +87,8 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 		                //String filename = FilenameUtils.getName(item.getName());
 		                InputStream filecontent = item.getInputStream();
 		                
-		                byte[] bytes = IOUtils.toByteArray(filecontent);
-		                newCertificate.setPublicKeyWithBytes(bytes);
+		                publicKeyBytes = IOUtils.toByteArray(filecontent);
+		                newCertificate.setPublicKeyWithBytes(publicKeyBytes);
 		            }
 		        }
 		    } catch (FileUploadException e) {
@@ -93,11 +97,14 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 
 		    // validate and insert into db
 	        try {
-	        	newCertificate.validate();
+	        	//create certificate
+	        	X509Certificate cert = RA.getCertificateWithRequest(newCertificate);
+	        	String certString = CertificateWriters.getPemString(cert);
+	        	byte[] certBytes = certString.getBytes();
 	        	
 	    		Connection dbCon = Database.getConnection();
 	    		PreparedStatement statement = (PreparedStatement) dbCon.prepareStatement(
-    				"INSERT INTO certificate (common_name, country, stateprovince, organization, date, user_id) VALUES (?, ?, ?, ?, NOW(), ?);"
+    				"INSERT INTO certificate (common_name, country, stateprovince, organization, date, user_id, certificate, publickey) VALUES (?, ?, ?, ?, NOW(), ?, ?, ?);"
 				);
 	    		User connectedUser = (User) request.getSession().getAttribute(Config.ATT_SESSION_USER);
 	    		
@@ -106,8 +113,11 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	    		statement.setString(3, newCertificate.stateprovince);
 	    		statement.setString(4, newCertificate.organization);
 	    		statement.setInt(5, connectedUser.id);
+	    		statement.setBytes(6, certBytes);
+	    		statement.setBytes(7, publicKeyBytes);
 	    		
-	    		if (statement.executeUpdate() != 0) {
+	    		if (statement.executeUpdate() != 0)
+	    		{
 	    			request.setAttribute( Config.ATT_SUCCESS, "Certificate created");
 	    			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
 	    			return;

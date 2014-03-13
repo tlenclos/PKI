@@ -9,7 +9,6 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.Security;
-import java.security.cert.CRL;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
@@ -20,15 +19,23 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509v2CRLBuilder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
-import org.bouncycastle.jce.provider.X509CRLEntryObject;
 
 import pki.entities.CRLEntry;
 
-public class CertificateGenerator {
+public class CertificateGenerator
+{	
+	private static boolean _init = false;
+	
+	public static void init()
+	{
+		if(!_init)
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+	}
 	
 	public final static String defaultAlgorithm = "SHA256withRSA";
 	public static KeyPair generateKeys() throws NoSuchAlgorithmException, NoSuchProviderException
 	{
+		init();
 		//generate key (RSA)
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
 		keyPairGenerator.initialize(1024, new SecureRandom());
@@ -40,15 +47,14 @@ public class CertificateGenerator {
 	}
 	
 	public static X509Certificate generateCertificate(String signatureAlgorithm, Date notBefore, Date notAfter, String subjectName, KeyPair keys, X509Certificate issuerCertificate, PrivateKey issuerPrivateKey)
-	{
-		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-		
+	{		
+		init();
 		// set properties
 		BigInteger serialNumber = BigInteger.valueOf(System.currentTimeMillis());
 		
 	    try {
 		    
-	    	String issuerCN = issuerCertificate != null ? issuerCertificate.getSubjectDN().getName() : subjectName; 
+	    	String issuerCN = issuerCertificate != null ? issuerCertificate.getSubjectX500Principal().getName() : subjectName; 
 		    PrivateKey privateKey = issuerPrivateKey != null ? issuerPrivateKey : keys.getPrivate();
 	    	// build
 			X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(issuerCN), serialNumber, notBefore, notAfter, new X500Name(subjectName), SubjectPublicKeyInfo.getInstance(keys.getPublic().getEncoded()));
@@ -57,7 +63,6 @@ public class CertificateGenerator {
 			
 			X509Certificate cert = (X509Certificate)certificateFactory.generateCertificate(new ByteArrayInputStream(certBytes));
 			
-			cert.verify(issuerCertificate != null ? issuerCertificate.getPublicKey() : keys.getPublic(), signatureAlgorithm);
 			return cert;
 	    }
 	    catch(Exception e)
@@ -69,6 +74,7 @@ public class CertificateGenerator {
 
 	public static X509CRL generateCRL(X509Certificate issuerCertificate, PrivateKey issuerPrivateKey, CRLEntry[] crlEntries )
 	{
+		init();
 		try
 		{
 			X509v2CRLBuilder crlBuilder = new X509v2CRLBuilder(new X500Name(issuerCertificate.getSubjectDN().getName()),Calendar.getInstance().getTime());

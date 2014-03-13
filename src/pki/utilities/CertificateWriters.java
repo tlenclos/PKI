@@ -2,6 +2,8 @@ package pki.utilities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.security.cert.X509Certificate;
@@ -46,10 +48,11 @@ public class CertificateWriters
 		if(file.exists())
 			file.delete();
 		
+		//a mon avis, le dossier CA existe pas et c'est ça qui merde
+		
 		try {
-			file.createNewFile();
-			OutputStream os = new ByteArrayOutputStream();
-			FileUtilities.writeStream(os, certificatePem);
+			FileWriter writer = new FileWriter(file);
+			FileUtilities.writeStream(writer, certificatePem);
 			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
