@@ -10,10 +10,25 @@
     
 	<form role="form"method="post" action="/PKI/secure/certificates/edit">
         <div class="form-group">
-	        <label for="email">Email <span class="requis">*</span></label>
-	        <input type="email" id="email" name="email" value="${param.email}" size="20" maxlength="60" class="form-control" />
+	        <label for="commonName">Common name <span class="requis">*</span></label>
+	        <input type=text id="commonName" name="commonName" value="${param.commonName}" size="20" maxlength="60" class="form-control" />
 	    </div>
-	                        
+	    
+        <div class="form-group">
+	        <label for="country">Country</label>
+	        <input type=text id="country" name="country" value="${param.country}" size="20" maxlength="60" class="form-control" />
+	    </div>
+
+        <div class="form-group">
+	        <label for="stateprovince">State province</label>
+	        <input type=text id="stateprovince" name="stateprovince" value="${param.stateprovince}" size="20" maxlength="60" class="form-control" />
+	    </div>
+	   
+        <div class="form-group">
+	        <label for="organization">Organization</label>
+	        <input type=text id="organization" name="organization" value="${param.organization}" size="20" maxlength="60" class="form-control" />
+	    </div>   
+         
 	    <input type="submit" value="Save" class="btn btn-default" />
 	</form> 
     
