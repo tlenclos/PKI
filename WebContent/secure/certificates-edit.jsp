@@ -8,7 +8,7 @@
     <h2>Edit: Title</h2>
     <p><a href="" class="btn btn-default">Save</a> <a href="" class="btn btn-warning">Revoke</a></p>
     
-	<form role="form"method="post" action="/PKI/secure/certificates/edit">
+	<form role="form" method="post" action="/PKI/secure/certificates/edit" enctype="multipart/form-data">
         <div class="form-group">
 	        <label for="commonName">Common name <span class="requis">*</span></label>
 	        <input type=text id="commonName" name="commonName" value="${param.commonName}" size="20" maxlength="60" class="form-control" />
@@ -27,6 +27,11 @@
         <div class="form-group">
 	        <label for="organization">Organization</label>
 	        <input type=text id="organization" name="organization" value="${param.organization}" size="20" maxlength="60" class="form-control" />
+	    </div>   
+	    
+	    <div class="form-group">
+	        <label for="publicKey">Public Key</label>
+	        <input type="file" name="file" />
 	    </div>   
          
 	    <input type="submit" value="Save" class="btn btn-default" />

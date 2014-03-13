@@ -1,6 +1,8 @@
 package pki.servlets;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,13 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 
 import pki.Certificate;
 import pki.Config;
 import pki.Database;
-import pki.User;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 
 @WebServlet("/secure/certificates/edit")
 public class CertificatesEdit extends javax.servlet.http.HttpServlet {
@@ -36,8 +43,35 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 		} else if (request.getMethod() == "POST" && request.getParameterValues("id") != null) { // Update
 			
 		} else if (request.getMethod() == "POST") { // Create
-	        Certificate newCertificate = new Certificate();
-	        
+			
+			Certificate newCertificate = new Certificate();
+			
+			try {
+		        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+		        for (FileItem item : items)
+		        {
+		            if (item.isFormField())
+		            {
+		                // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
+		                String fieldname = item.getFieldName();
+		                String fieldvalue = item.getString();
+		                
+		                newCertificate.setDataForFieldAndValue(fieldname, fieldvalue);
+		            } else {
+		                // Process form file field (input type="file").
+		                //String fieldname = item.getFieldName();
+		                //String filename = FilenameUtils.getName(item.getName());
+		                InputStream filecontent = item.getInputStream();
+		                
+		                byte[] bytes = IOUtils.toByteArray(filecontent);
+		                newCertificate.setPublicKeyWithBytes(bytes);
+		            }
+		        }
+		    } catch (FileUploadException e) {
+		        throw new ServletException("Cannot parse multipart request.", e);
+		    }
+
+		    // validate and insert into db
 	        try {
 	        	newCertificate.validate();
 	        	
