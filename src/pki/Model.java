@@ -1,6 +1,6 @@
 package pki;
 
-public abstract class Model {
+public class Model {
 	/**
 	 * Validate mail address
 	 */

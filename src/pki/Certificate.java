@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import pki.utilities.KeypairUtility;
 
-public class Certificate extends Model {
-	public int id;
-	public String commonName;
-	public String country;
-	public String stateprovince;
-	public String organization;
-	public Date date;
-	public int revoked;
-	public String revokedDate;
-	public PublicKey publicKey;
+public class Certificate {
+	private int id;
+	private String commonName;
+	private String country;
+	private String stateprovince;
+	private String organization;
+	private Date date;
+	private int revoked;
+	private String revokedDate;
+	private PublicKey publicKey;
 	
 	public Certificate(String commonName, String country, String stateprovince, String organization, String date, int revoked, String revokedDate, byte[] publicKeyBytes)
 	{
@@ -126,9 +126,9 @@ public class Certificate extends Model {
 		this.date = Calendar.getInstance().getTime();
 	}
 
-	public Boolean validate() throws Exception {
-		return 
-			this.validateName(this.commonName)
+	public Boolean validate(Model model) throws Exception {
+		return
+				model.validateName(this.commonName)
 		;
 	}
 	

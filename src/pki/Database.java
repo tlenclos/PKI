@@ -12,11 +12,14 @@ public class Database {
 	private Database()
 	{}
  
-	private static Database INSTANCE = new Database();
+	private static Database _dbInstance;
  
 	public static Database getInstance()
-	{	
-		return INSTANCE;
+	{
+		if(_dbInstance == null)
+			_dbInstance = new Database();
+
+		return _dbInstance;
 	}
 	
 	public static Connection getConnection() {

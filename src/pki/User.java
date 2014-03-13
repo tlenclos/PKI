@@ -1,6 +1,6 @@
 package pki;
 
-public class User extends Model {
+public class User {
 	public int id;
 	public String firstname;
 	public String lastname;
@@ -14,12 +14,12 @@ public class User extends Model {
 		this.password = password;
 	}
 	
-	public Boolean validate() throws Exception {
-		return 
-			this.validateEmail(this.email)
-			&& this.validatePassword(password, password)
-			&& this.validateName(this.firstname)
-			&& this.validateName(this.lastname)
+	public Boolean validate(Model model) throws Exception {
+		return
+				model.validateEmail(email)
+			&& model.validatePassword(password, password)
+			&& model.validateName(firstname)
+			&& model.validateName(lastname)
 		;
 	}
 }
