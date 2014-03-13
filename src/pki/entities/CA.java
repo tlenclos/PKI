@@ -113,19 +113,19 @@ public class CA
 	private void loadCertificateAndPrivateKey()
 	{
 		// load data
-		_certificate = null;
-		try{
+		try {
 			_keyPair = KeypairUtility.LoadKeyPair(CA_DATA_SAVE_PATH, "DSA");
-			CertificateReaders.ReadCertificateFromFile(new File(CA_DATA_SAVE_PATH+"cert.pem"));			
+			_certificate = CertificateReaders.ReadCertificateFromFile(new File(CA_DATA_SAVE_PATH+"cert.pem"));			
 		}
-		catch (Exception e){
+		catch (Exception e) {
 			_keyPair = null;
 			_certificate = null;
 		}
 		
 		if(_certificate == null)
 		{
-			generateSelfSignedCACertificate();
+			this.generateSelfSignedCACertificate();
+			this.saveCertificateAndPrivateKey();
 		}
 	}
 }

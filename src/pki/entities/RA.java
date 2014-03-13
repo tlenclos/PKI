@@ -1,6 +1,9 @@
 package pki.entities;
 
-public class RA
-{
-	
+import pki.CertificateRequest;
+
+public class RA {
+	public static void certificateWithRequest(CertificateRequest req) {
+		//
+	}
 }
