@@ -1,6 +1,7 @@
 package pki;
 
 public class User extends Model {
+	public int id;
 	public String firstname;
 	public String lastname;
 	public String email;

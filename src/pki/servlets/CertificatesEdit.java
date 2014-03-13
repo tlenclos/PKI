@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import pki.Certificate;
 import pki.Config;
 import pki.Database;
+import pki.User;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -77,13 +78,15 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	        	
 	    		Connection dbCon = Database.getConnection();
 	    		PreparedStatement statement = (PreparedStatement) dbCon.prepareStatement(
-    				"INSERT INTO certificate (common_name, country, stateprovince, organization) VALUES (?, ?, ?, ?);"
+    				"INSERT INTO certificate (common_name, country, stateprovince, organization, date, user_id) VALUES (?, ?, ?, ?, NOW(), ?);"
 				);
+	    		User connectedUser = (User) request.getSession().getAttribute(Config.ATT_SESSION_USER);
 	    		
 	    		statement.setString(1, newCertificate.commonName);
 	    		statement.setString(2, newCertificate.country);
 	    		statement.setString(3, newCertificate.stateprovince);
 	    		statement.setString(4, newCertificate.organization);
+	    		statement.setInt(5, connectedUser.id);
 	    		
 	    		if (statement.executeUpdate() != 0) {
 	    			request.setAttribute( Config.ATT_SUCCESS, "Certificate created");

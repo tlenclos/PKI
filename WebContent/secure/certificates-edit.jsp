@@ -2,11 +2,10 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:template>
-   <jsp:attribute name="title">Edit certificate</jsp:attribute>
+   <jsp:attribute name="title">Create certificate</jsp:attribute>
     
     <jsp:body>
-    <h2>Edit: Title</h2>
-    <p><a href="" class="btn btn-default">Save</a> <a href="" class="btn btn-warning">Revoke</a></p>
+    <h2>Create certificate</h2>
     
 	<form role="form" method="post" action="/PKI/secure/certificates/edit" enctype="multipart/form-data">
         <div class="form-group">

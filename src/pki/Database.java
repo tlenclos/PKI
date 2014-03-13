@@ -47,6 +47,8 @@ public class Database {
 			ResultSet result = statement.executeQuery();
 	    		
 			while (result.next()) {
+				tryLoginUser.id = result.getInt("id");
+				tryLoginUser.email = result.getString("email");
 				tryLoginUser.firstname = result.getString("firstname");
 				tryLoginUser.lastname = result.getString("lastname");
 				
