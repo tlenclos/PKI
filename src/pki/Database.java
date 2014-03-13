@@ -1,8 +1,15 @@
 package pki;
 
+import java.io.InputStream;
+import java.security.cert.X509Certificate;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import pki.entities.CRLEntry;
+import pki.utilities.CertificateReaders;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -63,6 +70,36 @@ public class Database {
 		}
 
 		return null;
+	}
+	
+	public static CRLEntry[] revokedCertificates()
+	{
+		Connection dbCon = Database.getConnection();
+		
+		try {
+			
+			ArrayList<CRLEntry> entries = new ArrayList<CRLEntry>();
+			String sql = "SELECT certificate,revoked_date FROM certificate WHERE revoked = 1";
+			PreparedStatement statement = (PreparedStatement) dbCon.prepareStatement(sql);
+			ResultSet result = statement.executeQuery();
+    		
+			while (result.next()) {
+				CRLEntry entry = new CRLEntry();
+				InputStream blobStream = result.getBlob("certificate").getBinaryStream();
+				X509Certificate certificate = CertificateReaders.ReadCertificateFromInputStream(blobStream);
+				entry.RevocationDate = Calendar.getInstance().getTime(); // change
+				if (certificate != null)
+				{
+					entry.SerialNumber = certificate.getSerialNumber();
+					entries.add(entry);
+				}
+			}
+			
+			return entries.toArray(new CRLEntry[0]);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

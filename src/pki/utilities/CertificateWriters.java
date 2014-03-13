@@ -12,7 +12,7 @@ import org.bouncycastle.openssl.PEMWriter;
 
 public class CertificateWriters
 {
-	public static String getPemString(X509Certificate cert){
+	public static String getPemString(Object cert){
 		StringWriter stringWriter = null;
         PEMWriter pemWriter = null;
         String result = null;
@@ -41,14 +41,13 @@ public class CertificateWriters
         return result;
 	}
 	
-	public static boolean WriteToFile(File file, X509Certificate cert)
+	public static boolean WriteToFile(File file, Object cert)
 	{
 		boolean result = false;
 		String certificatePem = getPemString(cert);
 		if(file.exists())
 			file.delete();
 		
-		//a mon avis, le dossier CA existe pas et c'est ça qui merde
 		
 		try {
 			FileWriter writer = new FileWriter(file);

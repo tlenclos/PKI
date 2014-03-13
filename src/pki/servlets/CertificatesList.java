@@ -39,7 +39,7 @@ public class CertificatesList extends javax.servlet.http.HttpServlet {
 
 	        try {
 	        	connection = Database.getConnection();
-	            preparedStatement = (PreparedStatement) connection.prepareStatement( "SELECT * FROM certificate" );
+	            preparedStatement = (PreparedStatement) connection.prepareStatement( "SELECT * FROM certificate where revoked IS NULL OR revoked != 1" );
 	            resultSet = preparedStatement.executeQuery();
 	            while ( resultSet.next() ) {
 	            	certificates.add(Certificate.mapWithDatabase(resultSet));

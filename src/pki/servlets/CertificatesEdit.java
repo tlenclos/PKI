@@ -24,6 +24,7 @@ import pki.Certificate;
 import pki.Config;
 import pki.Database;
 import pki.User;
+import pki.entities.CA;
 import pki.entities.RA;
 import pki.utilities.CertificateWriters;
 
@@ -43,25 +44,27 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 		HttpSession session = request.getSession();
 		
 		if (request.getMethod().equals("GET") && request.getParameterValues("id") != null 
-				&& request.getParameterValues("delete") != null) { // Delete
+				&& request.getParameterValues("delete") != null) { // REVOKE
 			
 			Connection dbCon = null;
 	        PreparedStatement preparedStatement = null;
 
 	        try {
 	        	dbCon = Database.getConnection();
-	            preparedStatement = (PreparedStatement) dbCon.prepareStatement("DELETE FROM certificate WHERE id = ?");
+	            preparedStatement = (PreparedStatement) dbCon.prepareStatement("UPDATE certificate SET revoked = 1 WHERE id = ?");
 	            preparedStatement.setInt(1, Integer.parseInt(request.getParameter("id")));
 	            
 	            int statut = preparedStatement.executeUpdate();
 	            if ( statut == 0 ) {
-	            	request.setAttribute( Config.ATT_ERRORS, "Error while deleting certificate");
+	            	request.setAttribute( Config.ATT_ERRORS, "Error while updating certificate");
 	            } else {
 	            	request.setAttribute( Config.ATT_ERRORS, "Certificate deleted");
 	            }
 	        } catch (Exception e) {
-	        	request.setAttribute( Config.ATT_ERRORS, "Error while deleting certificate");
+	        	request.setAttribute( Config.ATT_ERRORS, "Error while updating certificate");
 	        }
+	        
+	        CA.getInstance().generateCRL();
 	        
 			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
 			return;
@@ -96,7 +99,6 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	        	request.setAttribute( Config.ATT_ERRORS, "Error while downloading certificate");
 	        }
 	        
-			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
 			return;
 			
 		}
