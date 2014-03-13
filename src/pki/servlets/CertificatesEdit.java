@@ -36,14 +36,34 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	{
 		HttpSession session = request.getSession();
 		
-		if (request.getMethod() == "GET" && request.getParameterValues("id") != null) { // Edit
+		if (request.getMethod() == "GET" && request.getParameterValues("id") != null 
+				&& request.getParameterValues("delete") != null) { // Delete
 			
-		} else if (request.getMethod() == "GET" && request.getParameterValues("id") != null 
-			&& request.getParameterValues("delete") != null) { // Delete
+			Connection dbCon = null;
+	        PreparedStatement preparedStatement = null;
+
+	        try {
+	        	dbCon = Database.getConnection();
+	            preparedStatement = (PreparedStatement) dbCon.prepareStatement("DELETE FROM certificate WHERE id = ?");
+	            preparedStatement.setInt(1, Integer.parseInt(request.getParameter("id")));
+	            
+	            int statut = preparedStatement.executeUpdate();
+	            if ( statut == 0 ) {
+	            	request.setAttribute( Config.ATT_ERRORS, "Error while deleting certificate");
+	            } else {
+	            	request.setAttribute( Config.ATT_ERRORS, "Certificate deleted");
+	            }
+	        } catch (Exception e) {
+	        	request.setAttribute( Config.ATT_ERRORS, "Error while deleting certificate");
+	        }
+	        
+			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
+			return;
 			
+		} else if (request.getMethod() == "GET" && request.getParameterValues("id") != null) { // Edit
 		} else if (request.getMethod() == "POST" && request.getParameterValues("id") != null) { // Update
-			
 		} else if (request.getMethod() == "POST") { // Create
+			
 			Certificate newCertificate = new Certificate();
 			
 			try {
