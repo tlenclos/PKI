@@ -24,12 +24,17 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	{
 		HttpSession session = request.getSession();
 		
-		if (request.getMethod() == "GET") {
-			this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
-		} else if (request.getMethod() == "POST") {
+		if (request.getMethod() == "GET" && request.getParameterValues("id") != null) { // Edit
 			
-		} else {
-			this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
+		} else if (request.getMethod() == "GET" && request.getParameterValues("id") != null 
+			&& request.getParameterValues("delete") != null) { // Delete
+			
+		} else if (request.getMethod() == "POST" && request.getParameterValues("id") != null) { // Update
+			
+		} else if (request.getMethod() == "POST") { // Create
+			
 		}
+		
+		this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
 	}
 }
