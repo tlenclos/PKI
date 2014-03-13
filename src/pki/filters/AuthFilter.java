@@ -13,10 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import pki.Config;
-import pki.servlets.Login;
 
 public class AuthFilter implements Filter {
-	public static final String LOGIN_PAGE  = "/api/login";
+	public static final String LOGIN_PAGE  = "/login";
 	    
     public void init( FilterConfig config ) throws ServletException {
     }

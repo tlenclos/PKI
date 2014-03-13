@@ -5,9 +5,10 @@
 <html>
 <header>
 	<link rel="stylesheet" href="/PKI/bootstrap.min.css">
+	<link rel="stylesheet" href="/PKI/styles.css">
 	<title><jsp:invoke fragment="title"/></title>
 </header>
-  <body>
+  <body class="container">
 	<nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
@@ -32,7 +33,7 @@
 	  </div><!-- /.container-fluid -->
 	</nav>
 
-    <div class="container">
+    <div class="container-fluid">
 		<c:if test="${not empty errors}">
 			<div class="alert alert-dismissable alert-warning">${errors}</div>
 		</c:if>

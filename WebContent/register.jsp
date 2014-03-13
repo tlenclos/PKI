@@ -29,7 +29,7 @@
 	        <input type="password" id="password" name="password" value="${param.passwords}" size="20" maxlength="60" class="form-control" />
 	    </div>
 	                        
-	    <input type="submit" value="Valider"  />
+	    <input type="submit" value="Valider" class="btn btn-default"  />
 	</form> 
     </jsp:body>
 </t:template>

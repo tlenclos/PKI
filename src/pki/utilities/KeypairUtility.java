@@ -81,5 +81,31 @@ public class KeypairUtility {
  
 		return new KeyPair(publicKey, privateKey);
 	}
+	
+	public static byte[] getEncodedBytesForPublicKey(PublicKey publicKey)
+	{
+		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+		
+		byte[] bytes = x509EncodedKeySpec.getEncoded();
+		
+		return bytes;
+	}
+	
+	public static PublicKey getPublicKeyFromEncodedBytes(byte[] bytes)
+	{
+		try{
+		KeyFactory keyFactory = KeyFactory.getInstance("DSA");
+		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(bytes);
+		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+		
+		return publicKey;
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return null;
+	}
 
 }
