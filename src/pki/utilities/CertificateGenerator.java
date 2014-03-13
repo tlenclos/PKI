@@ -6,8 +6,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.cert.CertificateFactory;
@@ -19,6 +17,8 @@ import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 
 public class CertificateGenerator {
+	
+	public final static String defaultAlgorithm = "SHA256withRSA";
 	public static KeyPair generateKeys() throws NoSuchAlgorithmException, NoSuchProviderException
 	{
 		//generate key (RSA)
@@ -26,6 +26,11 @@ public class CertificateGenerator {
 		keyPairGenerator.initialize(1024, new SecureRandom());
 	    return keyPairGenerator.generateKeyPair();
 	}
+	public static X509Certificate genereateCertificate(String issuerCN, Date notBefore, Date notAfter, String subjectName,KeyPair keys)
+	{
+		return genereateCertificate(defaultAlgorithm, issuerCN, notBefore, notAfter, subjectName, keys);
+	}
+	
 	public static X509Certificate genereateCertificate(String signatureAlgorithm, String issuerCN, Date notBefore, Date notAfter, String subjectName,KeyPair keys)
 	{
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
