@@ -1,6 +1,7 @@
 package pki.entities;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -16,6 +17,7 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 
+import pki.utilities.CertificateReaders;
 import pki.utilities.CertificateWriters;
 import pki.utilities.JCESigner;
 import pki.utilities.KeypairUtility;
@@ -28,7 +30,7 @@ public class CA
 	private static final String CA_DATA_SAVE_PATH = "/CA/";
 	
 	// singleton
-	public CA getInstance()
+	public static CA getInstance()
 	{
 		if(_instance == null)
 			_instance = new CA();
@@ -89,7 +91,12 @@ public class CA
 	{
 		if(_certificate != null)
 		{
-			// need to store certificate!		
+			try{
+				CertificateWriters.WriteToFile(new File(CA_DATA_SAVE_PATH+"cert.pem"), _certificate);
+			}
+			catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 		if(_keyPair != null)
@@ -109,9 +116,16 @@ public class CA
 		_certificate = null;
 		try{
 			_keyPair = KeypairUtility.LoadKeyPair(CA_DATA_SAVE_PATH, "DSA");
+			CertificateReaders.ReadCertificateFromFile(new File(CA_DATA_SAVE_PATH+"cert.pem"));			
 		}
 		catch (Exception e){
 			_keyPair = null;
+			_certificate = null;
+		}
+		
+		if(_certificate == null)
+		{
+			generateSelfSignedCACertificate();
 		}
 	}
 }
