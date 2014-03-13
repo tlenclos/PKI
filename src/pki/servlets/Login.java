@@ -25,10 +25,11 @@ public class Login extends javax.servlet.http.HttpServlet {
 			throws ServletException, IOException 
 	{
 		HttpSession session = request.getSession();
-		
-		if (request.getMethod() == "POST") {
+
+		String method = request.getMethod();
+		if (method.equals("POST")) {
 			User tryLoginUser = Database.loginUser(request.getParameter(FIELD_EMAIL), request.getParameter(FIELD_PASSWORD));
-			
+
 			if (tryLoginUser != null) {
 				session.setAttribute( Config.ATT_SESSION_USER, tryLoginUser);
 				response.sendRedirect( request.getContextPath() + "/secure/certificates" );
@@ -36,7 +37,7 @@ public class Login extends javax.servlet.http.HttpServlet {
 				request.setAttribute( Config.ATT_ERRORS, "Bad credentials");
 				this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
 			}
-		} else if (request.getMethod() == "GET" && request.getParameterValues("disconnect") != null) {
+		} else if (method.equals("GET") && request.getParameterValues("disconnect") != null) {
 			session.setAttribute( Config.ATT_SESSION_USER, null);
 			this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
 		} else {

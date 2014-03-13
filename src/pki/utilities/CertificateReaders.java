@@ -11,19 +11,17 @@ import java.security.cert.X509Certificate;
 public class CertificateReaders {
 	
 	public static X509Certificate ReadCertificateFromFile(File file) {
-		if(file.exists()) {
-			try {
-				InputStream is = new FileInputStream(file);
-				String pemString = FileUtilities.readStream(is);
-				
-				CertificateFactory cf = CertificateFactory.getInstance("X.509");
-				Certificate cert = cf.generateCertificate(new ByteArrayInputStream(pemString.getBytes()));
-				
-				return (X509Certificate)cert;
-			}
-			catch (Exception e){
-				e.printStackTrace();
-			}
+		try {
+			InputStream is = new FileInputStream(file);
+			String pemString = FileUtilities.readStream(is);
+
+			CertificateFactory cf = CertificateFactory.getInstance("X.509");
+			Certificate cert = cf.generateCertificate(new ByteArrayInputStream(pemString.getBytes()));
+
+			return (X509Certificate)cert;
+		}
+		catch (Exception e){
+			e.printStackTrace();
 		}
 		
 		return null;
