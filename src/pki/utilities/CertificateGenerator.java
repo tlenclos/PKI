@@ -6,6 +6,8 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.cert.CertificateFactory;
@@ -26,12 +28,12 @@ public class CertificateGenerator {
 		keyPairGenerator.initialize(1024, new SecureRandom());
 	    return keyPairGenerator.generateKeyPair();
 	}
-	public static X509Certificate genereateCertificate(String issuerCN, Date notBefore, Date notAfter, String subjectName,KeyPair keys)
+	public static X509Certificate generateCertificate(Date notBefore, Date notAfter, String subjectName,KeyPair keys, X509Certificate issuerCertificate, PrivateKey issuerPrivateKey)
 	{
-		return genereateCertificate(defaultAlgorithm, issuerCN, notBefore, notAfter, subjectName, keys);
+		return generateCertificate(defaultAlgorithm, notBefore, notAfter, subjectName, keys,issuerCertificate,issuerPrivateKey);
 	}
 	
-	public static X509Certificate genereateCertificate(String signatureAlgorithm, String issuerCN, Date notBefore, Date notAfter, String subjectName,KeyPair keys)
+	public static X509Certificate generateCertificate(String signatureAlgorithm, Date notBefore, Date notAfter, String subjectName, KeyPair keys, X509Certificate issuerCertificate, PrivateKey issuerPrivateKey)
 	{
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		
@@ -40,14 +42,16 @@ public class CertificateGenerator {
 		
 	    try {
 		    
-		    // build
+	    	String issuerCN = issuerCertificate != null ? issuerCertificate.getSubjectDN().getName() : subjectName; 
+		    PrivateKey privateKey = issuerPrivateKey != null ? issuerPrivateKey : keys.getPrivate();
+	    	// build
 			X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(issuerCN), serialNumber, notBefore, notAfter, new X500Name(subjectName), SubjectPublicKeyInfo.getInstance(keys.getPublic().getEncoded()));
-			byte[] certBytes = certBuilder.build(new JCESigner(keys.getPrivate(), signatureAlgorithm)).getEncoded();
+			byte[] certBytes = certBuilder.build(new JCESigner(privateKey, signatureAlgorithm)).getEncoded();
 			CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 			
 			X509Certificate cert = (X509Certificate)certificateFactory.generateCertificate(new ByteArrayInputStream(certBytes));
 			
-			cert.verify(keys.getPublic(), signatureAlgorithm);
+			cert.verify(issuerCertificate != null ? issuerCertificate.getPublicKey() : keys.getPublic(), signatureAlgorithm);
 			return cert;
 	    }
 	    catch(Exception e)
