@@ -18,6 +18,12 @@
 			pki.servlets.CertificatesList
 		</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>CertificatesEdit</servlet-name>
+		<servlet-class>
+			pki.servlets.CertificatesEdit
+		</servlet-class>
+	</servlet>
 	
 	<filter>
 		<filter-name>AuthFilter</filter-name>
