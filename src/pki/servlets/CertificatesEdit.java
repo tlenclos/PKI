@@ -2,7 +2,10 @@ package pki.servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.cert.X509Certificate;
+import java.sql.Blob;
+import java.sql.ResultSet;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -39,7 +42,7 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	{
 		HttpSession session = request.getSession();
 		
-		if (request.getMethod() == "GET" && request.getParameterValues("id") != null 
+		if (request.getMethod().equals("GET") && request.getParameterValues("id") != null 
 				&& request.getParameterValues("delete") != null) { // Delete
 			
 			Connection dbCon = null;
@@ -63,9 +66,43 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
 			return;
 			
-		} else if (request.getMethod() == "GET" && request.getParameterValues("id") != null) { // Edit
-		} else if (request.getMethod() == "POST" && request.getParameterValues("id") != null) { // Update
-		} else if (request.getMethod() == "POST") { // Create
+		}
+		else if (request.getMethod().equals("GET") && request.getParameterValues("id") != null 
+				&& request.getParameterValues("download") != null) { // Delete
+			
+			Connection dbCon = null;
+	        PreparedStatement preparedStatement = null;
+
+	        try {
+	        	dbCon = Database.getConnection();
+	            preparedStatement = (PreparedStatement) dbCon.prepareStatement("SELECT certificate FROM certificate WHERE id = ?");
+	            preparedStatement.setInt(1, Integer.parseInt(request.getParameter("id")));
+	            
+	            ResultSet rs = preparedStatement.executeQuery();
+	            rs.next();
+	            Blob blob = rs.getBlob("certificate");
+	            byte[] certBytes = blob.getBytes(1, (int) blob.length());
+	            
+	            String filename = "certificate.pem";
+	            response.setContentType("APPLICATION/OCTET-STREAM");
+	            response.setHeader("Content-Disposition","attachment; filename=\"" + filename + "\"");
+	            
+	            OutputStream o = response.getOutputStream();
+	            o.write(certBytes);
+	            
+	            o.flush();
+	            o.close();
+	        } catch (Exception e) {
+	        	request.setAttribute( Config.ATT_ERRORS, "Error while downloading certificate");
+	        }
+	        
+			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
+			return;
+			
+		}
+		else if (request.getMethod().equals("GET") && request.getParameterValues("id") != null) { // Edit
+		} else if (request.getMethod().equals("POST") && request.getParameterValues("id") != null) { // Update
+		} else if (request.getMethod().equals("POST")) { // Create
 			
 			Certificate newCertificate = new Certificate();
 			byte[] publicKeyBytes = null;
