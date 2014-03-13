@@ -1,6 +1,11 @@
 package pki.servlets;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import pki.Config;
+import pki.Certificate;
 import pki.Database;
-import pki.User;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 
 @WebServlet("/secure/certificates")
 public class CertificatesList extends javax.servlet.http.HttpServlet {
@@ -25,10 +32,30 @@ public class CertificatesList extends javax.servlet.http.HttpServlet {
 		HttpSession session = request.getSession();
 		
 		if (request.getMethod() == "GET") {
-			this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
-		} else if (request.getMethod() == "POST") {
-			
-		} else {
+	        Connection connection = null;
+	        PreparedStatement preparedStatement = null;
+	        ResultSet resultSet = null;
+	        List<Certificate> certificates = new ArrayList<Certificate>();
+
+	        try {
+	        	connection = Database.getConnection();
+	            preparedStatement = (PreparedStatement) connection.prepareStatement( "SELECT * FROM certificate" );
+	            resultSet = preparedStatement.executeQuery();
+	            while ( resultSet.next() ) {
+	            	certificates.add(Certificate.mapWithDatabase(resultSet));
+	            }
+	        } catch ( Exception e ) {
+				System.out.println(e);
+	        }
+
+	        /*
+	        for ( Certificate certificate : certificates ) {
+	        	 System.out.println(certificate.id);
+            }
+	       	*/
+	        
+	        session.setAttribute( "certificates", certificates);
+	        
 			this.getServletContext().getRequestDispatcher( VIEW ).forward( request, response );
 		}
 	}

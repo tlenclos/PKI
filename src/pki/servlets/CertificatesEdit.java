@@ -44,7 +44,6 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 		} else if (request.getMethod() == "POST" && request.getParameterValues("id") != null) { // Update
 			
 		} else if (request.getMethod() == "POST") { // Create
-			
 			Certificate newCertificate = new Certificate();
 			
 			try {
@@ -90,6 +89,8 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	    		
 	    		if (statement.executeUpdate() != 0) {
 	    			request.setAttribute( Config.ATT_SUCCESS, "Certificate created");
+	    			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
+	    			return;
 	    		}
 			} catch (Exception e) {
 				request.setAttribute( Config.ATT_ERRORS, e.getMessage() );
