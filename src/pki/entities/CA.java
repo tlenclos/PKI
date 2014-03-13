@@ -2,6 +2,9 @@ package pki.entities;
 
 import java.io.File;
 import java.security.KeyPair;
+import java.security.cert.CRL;
+import java.security.cert.CRLSelector;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
@@ -102,6 +105,11 @@ public class CA
 			this.generateSelfSignedCACertificate();
 			this.saveCertificateAndPrivateKey();
 		}
+	}
+	
+	public CRL generateCRL()
+	{
+		return null;
 	}
 	
 	public X509Certificate getCertificate()

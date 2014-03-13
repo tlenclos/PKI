@@ -9,13 +9,20 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.security.cert.CRL;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.X509v2CRLBuilder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.jce.provider.X509CRLEntryObject;
+
+import pki.entities.CRLEntry;
 
 public class CertificateGenerator {
 	
@@ -58,5 +65,26 @@ public class CertificateGenerator {
 	    	e.printStackTrace();
 	    	return null;
 	    }		
+	}
+
+	public static X509CRL generateCRL(X509Certificate issuerCertificate, PrivateKey issuerPrivateKey, CRLEntry[] crlEntries )
+	{
+		try
+		{
+			X509v2CRLBuilder crlBuilder = new X509v2CRLBuilder(new X500Name(issuerCertificate.getSubjectDN().getName()),Calendar.getInstance().getTime());
+			for(CRLEntry entry : crlEntries)
+				crlBuilder.addCRLEntry(entry.SerialNumber, entry.RevocationDate,0);
+					
+			byte[] crlBytes = crlBuilder.build(new JCESigner(issuerPrivateKey, defaultAlgorithm)).getEncoded();		
+			CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+			X509CRL crl =  (X509CRL)certificateFactory.generateCRL(new ByteArrayInputStream(crlBytes));
+			
+			return crl;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
