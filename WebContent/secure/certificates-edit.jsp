@@ -7,7 +7,7 @@
     <jsp:body>
     <h2>Create certificate</h2>
     
-	<form role="form" method="post" action="/PKI/secure/certificates/edit" enctype="multipart/form-data">
+	<form method="post" action="/PKI/secure/certificates/edit" enctype="multipart/form-data">
         <div class="form-group">
 	        <label for="commonName">Common name <span class="requis">*</span></label>
 	        <input type=text id="commonName" name="commonName" value="${param.commonName}" size="20" maxlength="60" class="form-control" />

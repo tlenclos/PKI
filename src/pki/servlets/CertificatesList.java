@@ -3,9 +3,7 @@ package pki.servlets;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import pki.Certificate;
+import pki.Config;
 import pki.Database;
+import pki.User;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -39,7 +39,13 @@ public class CertificatesList extends javax.servlet.http.HttpServlet {
 
 	        try {
 	        	connection = Database.getConnection();
-	            preparedStatement = (PreparedStatement) connection.prepareStatement( "SELECT * FROM certificate where revoked IS NULL OR revoked != 1" );
+	            preparedStatement = (PreparedStatement) connection.prepareStatement(
+            		"SELECT * FROM certificate WHERE (revoked IS NULL OR revoked != 1) AND user_id = ?"
+        		);
+
+	            User loggedUser =  (User) request.getSession().getAttribute( Config.ATT_SESSION_USER );
+	            preparedStatement.setInt(1, loggedUser.id);
+	            
 	            resultSet = preparedStatement.executeQuery();
 	            while ( resultSet.next() ) {
 	            	certificates.add(Certificate.mapWithDatabase(resultSet));
@@ -47,12 +53,6 @@ public class CertificatesList extends javax.servlet.http.HttpServlet {
 	        } catch ( Exception e ) {
 				System.out.println(e);
 	        }
-
-	        /*
-	        for ( Certificate certificate : certificates ) {
-	        	 System.out.println(certificate.id);
-            }
-	       	*/
 	        
 	        session.setAttribute( "certificates", certificates);
 	        

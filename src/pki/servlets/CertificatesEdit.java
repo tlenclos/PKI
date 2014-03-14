@@ -12,7 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -41,8 +40,6 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException 
 	{
-		HttpSession session = request.getSession();
-		
 		if (request.getMethod().equals("GET") && request.getParameterValues("id") != null 
 				&& request.getParameterValues("revoke") != null) { // REVOKE
 			
@@ -51,8 +48,11 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 
 	        try {
 	        	dbCon = Database.getConnection();
-	            preparedStatement = (PreparedStatement) dbCon.prepareStatement("UPDATE certificate SET revoked = 1 WHERE id = ?");
+	            preparedStatement = (PreparedStatement) dbCon.prepareStatement("UPDATE certificate SET revoked = 1 WHERE id = ? AND user_id = ?");
+
+	            User loggedUser =  (User) request.getSession().getAttribute( Config.ATT_SESSION_USER );
 	            preparedStatement.setInt(1, Integer.parseInt(request.getParameter("id")));
+	            preparedStatement.setInt(2, loggedUser.id);
 	            
 	            int statut = preparedStatement.executeUpdate();
 	            if ( statut == 0 ) {
@@ -71,15 +71,18 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 			
 		}
 		else if (request.getMethod().equals("GET") && request.getParameterValues("id") != null 
-				&& request.getParameterValues("download") != null) { // Delete
+				&& request.getParameterValues("download") != null) { // Download
 			
 			Connection dbCon = null;
 	        PreparedStatement preparedStatement = null;
 
 	        try {
 	        	dbCon = Database.getConnection();
-	            preparedStatement = (PreparedStatement) dbCon.prepareStatement("SELECT certificate FROM certificate WHERE id = ?");
+	            preparedStatement = (PreparedStatement) dbCon.prepareStatement("SELECT certificate FROM certificate WHERE id = ? AND user_id = ?");
+
+	            User loggedUser =  (User) request.getSession().getAttribute( Config.ATT_SESSION_USER );
 	            preparedStatement.setInt(1, Integer.parseInt(request.getParameter("id")));
+	            preparedStatement.setInt(2, loggedUser.id);
 	            
 	            ResultSet rs = preparedStatement.executeQuery();
 	            rs.next();

@@ -1,18 +1,10 @@
 package pki.entities;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.security.KeyPair;
-import java.security.cert.CRL;
-import java.security.cert.CRLSelector;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.Date;
-
-import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.x509.X509V2CRLGenerator;
 
 import pki.Database;
 import pki.utilities.CertificateGenerator;

@@ -13,7 +13,6 @@ import pki.utilities.CertificateReaders;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
 
 public class Database {
 	private Database()
@@ -31,9 +30,6 @@ public class Database {
 	
 	public static Connection getConnection() {
     	Connection connexion = null;
-    	Statement statement = null;
-		ResultSet result = null;
-    	
     	try {
     		DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
     	    connexion = (Connection) DriverManager.getConnection( Config.dbUrl, Config.dbUsername, Config.dbPassword );

@@ -3,11 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
-<header>
+<head>
 	<link rel="stylesheet" href="/PKI/bootstrap.min.css">
 	<link rel="stylesheet" href="/PKI/styles.css">
 	<title><jsp:invoke fragment="title"/></title>
-</header>
+</head>
   <body class="container">
 	<nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
