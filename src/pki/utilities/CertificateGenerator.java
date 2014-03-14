@@ -16,13 +16,20 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.bouncycastle.asn1.ASN1OctetString;
+import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.CRLDistPoint;
+import org.bouncycastle.asn1.x509.DistributionPoint;
+import org.bouncycastle.asn1.x509.DistributionPointName;
 import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.GeneralName;
+import org.bouncycastle.asn1.x509.ReasonFlags;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509v2CRLBuilder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 
 import pki.entities.CRLEntry;
+import sun.security.x509.GeneralNames;
 
 public class CertificateGenerator
 {	
@@ -61,7 +68,15 @@ public class CertificateGenerator
 	    	// build
 			X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(issuerCN), serialNumber, notBefore, notAfter, new X500Name(subjectName), SubjectPublicKeyInfo.getInstance(keys.getPublic().getEncoded()));
 			if (issuerPrivateKey != null)
-			    certBuilder.addExtension(Extension.cRLDistributionPoints, true, ASN1OctetString.getInstance("http://localhost:8080/crl.crl"));
+			{
+				DEROctetString oct = new DEROctetString("http://localhost:8080/crl.crl".getBytes());
+		        DistributionPointName name = new DistributionPointName(4, oct);
+		        
+		        DistributionPoint point = new DistributionPoint(name,null,null);
+		        
+		        certBuilder.addExtension(Extension.cRLDistributionPoints, false, new CRLDistPoint(new DistributionPoint[] { point }));
+				
+			}
 			byte[] certBytes = certBuilder.build(new JCESigner(privateKey, signatureAlgorithm)).getEncoded();
 			CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 			
