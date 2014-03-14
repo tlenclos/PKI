@@ -27,11 +27,8 @@ public class Login extends javax.servlet.http.HttpServlet {
 			throws ServletException, IOException 
 	{
 		HttpSession session = request.getSession();
-		
-		System.out.println(request.getRealPath("/"));
-		
-		
 		String method = request.getMethod();
+		
 		if (method.equals("POST")) {
 			User tryLoginUser = Database.loginUser(request.getParameter(FIELD_EMAIL), request.getParameter(FIELD_PASSWORD));
 

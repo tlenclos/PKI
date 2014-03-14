@@ -22,6 +22,7 @@ import org.apache.commons.io.IOUtils;
 import pki.Certificate;
 import pki.Config;
 import pki.Database;
+import pki.Model;
 import pki.User;
 import pki.entities.CA;
 import pki.entities.RA;
@@ -103,7 +104,6 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	        }
 	        
 			return;
-			
 		}
 		else if (request.getMethod().equals("GET") && request.getParameterValues("id") != null) { // Edit
 		} else if (request.getMethod().equals("POST") && request.getParameterValues("id") != null) { // Update
@@ -112,7 +112,9 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 			Certificate newCertificate = new Certificate();
 			byte[] publicKeyBytes = null;
 			
-			try {
+		    // insert into db
+	        try {
+	        	// Validate
 		        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 		        for (FileItem item : items)
 		        {
@@ -125,21 +127,18 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 		                newCertificate.setDataForFieldAndValue(fieldname, fieldvalue);
 		            } else {
 		                // Process form file field (input type="file").
-		                //String fieldname = item.getFieldName();
-		                //String filename = FilenameUtils.getName(item.getName());
-		                InputStream filecontent = item.getInputStream();
-		                
-		                publicKeyBytes = IOUtils.toByteArray(filecontent);
-		                newCertificate.setPublicKeyWithBytes(publicKeyBytes);
+		            	if (item.getSize() > 0) {
+			                InputStream filecontent = item.getInputStream();
+			                
+			                publicKeyBytes = IOUtils.toByteArray(filecontent);
+			                newCertificate.setPublicKeyWithBytes(publicKeyBytes);
+		            	}
 		            }
 		        }
-		    } catch (FileUploadException e) {
-		        throw new ServletException("Cannot parse multipart request.", e);
-		    }
-
-		    // validate and insert into db
-	        try {
-	        	//create certificate
+		        
+		        newCertificate.validate(new Model());
+		        
+		        //create certificate
 	        	X509Certificate cert = RA.getCertificateWithRequest(newCertificate);
 	        	String certString = CertificateWriters.getPemString(cert);
 	        	byte[] certBytes = certString.getBytes();
@@ -163,6 +162,8 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	    			request.setAttribute( Config.ATT_SUCCESS, "Certificate created");
 	    			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
 	    			return;
+	    		} else {
+	    			throw new Exception("Fail to create certificate");
 	    		}
 			} catch (Exception e) {
 				request.setAttribute( Config.ATT_ERRORS, e.getMessage() );

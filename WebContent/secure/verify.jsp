@@ -5,7 +5,7 @@
    <jsp:attribute name="title">Verify certificate</jsp:attribute>
     
     <jsp:body>
-    <h2>Create certificate</h2>
+    <h2>Verify certificate</h2>
     
 	<form method="post" action="/PKI/secure/verify" enctype="multipart/form-data">
         <div class="form-group">

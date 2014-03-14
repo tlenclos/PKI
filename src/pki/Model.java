@@ -1,5 +1,7 @@
 package pki;
 
+import java.security.PublicKey;
+
 public class Model {
 	/**
 	 * Validate mail address
@@ -43,4 +45,13 @@ public class Model {
 	    
 	    return true;
 	}
+	
+	public Boolean validatePublicKey( PublicKey key ) throws Exception {
+	    if ( key == null ) {
+	        throw new Exception( "You must upload a key file" );
+	    }
+	    
+	    return true;
+	}
+	
 }

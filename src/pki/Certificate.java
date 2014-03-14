@@ -128,7 +128,8 @@ public class Certificate {
 
 	public Boolean validate(Model model) throws Exception {
 		return
-				model.validateName(this.commonName)
+			model.validateName(this.commonName)
+			&& model.validatePublicKey(this.publicKey)
 		;
 	}
 	
