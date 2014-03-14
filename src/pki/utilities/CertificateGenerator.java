@@ -15,7 +15,9 @@ import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509v2CRLBuilder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
@@ -58,6 +60,8 @@ public class CertificateGenerator
 		    PrivateKey privateKey = issuerPrivateKey != null ? issuerPrivateKey : keys.getPrivate();
 	    	// build
 			X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(issuerCN), serialNumber, notBefore, notAfter, new X500Name(subjectName), SubjectPublicKeyInfo.getInstance(keys.getPublic().getEncoded()));
+			if (issuerPrivateKey != null)
+			    certBuilder.addExtension(Extension.cRLDistributionPoints, true, ASN1OctetString.getInstance("http://localhost:8080/crl.crl"));
 			byte[] certBytes = certBuilder.build(new JCESigner(privateKey, signatureAlgorithm)).getEncoded();
 			CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 			

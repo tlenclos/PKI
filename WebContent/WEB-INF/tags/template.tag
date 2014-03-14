@@ -21,6 +21,7 @@
 	      <ul class="nav navbar-nav">
 	      	<c:if test="${not empty userSession}">
 	      		<li><a href="/PKI/secure/certificates">Certificates</a></li>
+	      		<li><a href="/PKI/secure/verify">Verify</a></li>
 	    		<li><a href="/PKI/login?disconnect">Logout</a></li>
 			</c:if>
 			<c:if test="${empty userSession}">

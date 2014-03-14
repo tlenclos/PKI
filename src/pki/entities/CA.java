@@ -120,6 +120,28 @@ public class CA
 		return crl;
 	}
 	
+	public boolean validateCertificate(X509Certificate certificate)
+	{
+		try
+		{
+			if (certificate == null)
+				return false;
+
+			certificate.verify(_keyPair.getPublic());
+
+			X509CRL crl = generateCRL();
+			if (crl == null)
+				return true;
+
+			return crl.isRevoked(certificate);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public X509Certificate getCertificate()
 	{
 		return _certificate;
