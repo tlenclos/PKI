@@ -44,7 +44,7 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 		HttpSession session = request.getSession();
 		
 		if (request.getMethod().equals("GET") && request.getParameterValues("id") != null 
-				&& request.getParameterValues("delete") != null) { // REVOKE
+				&& request.getParameterValues("revoke") != null) { // REVOKE
 			
 			Connection dbCon = null;
 	        PreparedStatement preparedStatement = null;

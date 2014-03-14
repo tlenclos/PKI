@@ -54,6 +54,16 @@ public class Register extends javax.servlet.http.HttpServlet {
 	    		
 	    		if (statement.executeUpdate() != 0) {
 	    			request.setAttribute( Config.ATT_SUCCESS, "You are now registered");
+	    			
+	    			// Auto login user
+	    			User tryLoginUser = Database.loginUser(request.getParameter(FIELD_EMAIL), request.getParameter(FIELD_PASSWORD));
+
+	    			if (tryLoginUser != null) {
+	    				request.getSession().setAttribute( Config.ATT_SESSION_USER, tryLoginUser);
+	    			}
+	    			
+	    			response.sendRedirect( request.getContextPath() + "/secure/certificates" );
+	    			return;
 	    		}
 			} catch (Exception e) {
 				request.setAttribute( Config.ATT_ERRORS, e.getMessage() );

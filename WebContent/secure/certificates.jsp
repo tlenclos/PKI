@@ -29,7 +29,7 @@
 			          <td><c:out value="${ certificate.id }"/></td>
 			          <td><c:out value="${ certificate.commonName }"/></td>
 			          <td><c:out value="${ certificate.date }"/></td>
-			          <td><a href="/PKI/secure/certificates/edit?id=<c:out value="${ certificate.id }"/>&download=true" class="btn btn-info">Download</a> <a href="/PKI/secure/certificates/edit?id=<c:out value="${ certificate.id }"/>&delete=true" class="btn btn-warning">Revoke</a></td>
+			          <td><a href="/PKI/secure/certificates/edit?id=<c:out value="${ certificate.id }"/>&download=true" class="btn btn-info">Download</a> <a href="/PKI/secure/certificates/edit?id=<c:out value="${ certificate.id }"/>&revoke=true" class="btn btn-warning">Revoke</a></td>
 			        </tr>
 			        </c:forEach>
 			      </tbody>
