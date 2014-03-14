@@ -35,7 +35,7 @@
 		        <li><a href="/PKI/login?disconnect">Logout</a></li>
 		      </ul>
 	      </c:if>
-	      
+	     
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>

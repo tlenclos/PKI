@@ -40,7 +40,7 @@ public class CertificatesList extends javax.servlet.http.HttpServlet {
 	        try {
 	        	connection = Database.getConnection();
 	            preparedStatement = (PreparedStatement) connection.prepareStatement(
-            		"SELECT * FROM certificate WHERE (revoked IS NULL OR revoked != 1) AND user_id = ?"
+            		"SELECT * FROM certificate WHERE user_id = ?"
         		);
 
 	            User loggedUser =  (User) request.getSession().getAttribute( Config.ATT_SESSION_USER );

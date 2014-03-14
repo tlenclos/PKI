@@ -25,11 +25,35 @@
 			      </thead>
 			      <tbody>
 			      	<c:forEach items="${ certificates }" var="certificate">
-			        <tr>
-			          <td><c:out value="${ certificate.id }"/></td>
+			      	
+			      	  <c:choose>
+						  <c:when test="${ certificate.revoked == 1}">
+						  	<tr class="revoked">
+						  </c:when>
+						  <c:otherwise>
+						  	<tr>
+					      </c:otherwise>
+		              </c:choose>
+		              
+			          <td>
+			          
+			      	  <c:choose>
+						  <c:when test="${ certificate.revoked == 1}">
+						  	<span class="label label-warning">[<c:out value="${ certificate.id }"/>] Revoked</span>
+						  </c:when>
+						  <c:otherwise>
+						  	<span class="label label-success">[<c:out value="${ certificate.id }"/>] Active</span>
+					      </c:otherwise>
+		              </c:choose>
+			          
+			          </td>
 			          <td><c:out value="${ certificate.commonName }"/></td>
 			          <td><c:out value="${ certificate.date }"/></td>
-			          <td><a href="/PKI/secure/certificates/edit?id=<c:out value="${ certificate.id }"/>&download=true" class="btn btn-info">Download</a> <a href="/PKI/secure/certificates/edit?id=<c:out value="${ certificate.id }"/>&revoke=true" class="btn btn-warning">Revoke</a></td>
+			          <td>
+			          <a href="/PKI/secure/certificates/edit?id=<c:out value="${ certificate.id }"/>&download=true" class="btn btn-info">Download</a> 
+					  <c:if test="${ certificate.revoked != 1}">
+			          	<a href="/PKI/secure/certificates/edit?id=<c:out value="${ certificate.id }"/>&revoke=true" class="btn btn-warning">Revoke</a></td>
+			          </c:if>
 			        </tr>
 			        </c:forEach>
 			      </tbody>

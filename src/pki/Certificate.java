@@ -140,6 +140,7 @@ public class Certificate {
         certificate.country = resultSet.getString("country");
         certificate.stateprovince = resultSet.getString("stateprovince");
         certificate.organization = resultSet.getString("organization");
+        certificate.revoked = resultSet.getInt("revoked");
 		
         return certificate;
     }
