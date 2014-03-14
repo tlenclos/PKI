@@ -98,4 +98,20 @@ public class Database {
 		}
 	}
 	
+	public static void resetCertificates()
+	{
+		String sql = "DELETE FROM certificate";
+		
+		try
+		{
+			Connection dbCon = Database.getConnection();
+			PreparedStatement statement = (PreparedStatement) dbCon.prepareStatement(sql);
+			statement.executeUpdate();
+		}
+		catch(Exception e)
+		{
+			
+		}		
+	}
+	
 }

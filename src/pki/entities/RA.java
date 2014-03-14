@@ -17,7 +17,7 @@ public class RA {
 		
 		String issuer = "CN="+req.getCommonName();
 		Date dateOfIssue = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000); // yesterday
-	    Date dateOfExpiry = new Date(System.currentTimeMillis() + 2 * 365 * 24 * 60 * 60 * 1000);// 2 years
+	    Date dateOfExpiry = new Date(System.currentTimeMillis() + 2l * 365l * 24l * 60l * 60l * 1000l);// 2 years
 		
 		return CertificateGenerator.generateCertificate(dateOfIssue, dateOfExpiry, issuer, userKeyPair, caCert, caKeyPair.getPrivate());
 	}

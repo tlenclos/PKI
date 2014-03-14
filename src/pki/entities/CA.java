@@ -31,10 +31,13 @@ public class CA
 	// self-signed certificate
 	public void generateSelfSignedCACertificate()
 	{
+		//truncate certificate
+		Database.resetCertificates();
+		
 		// set properties
 		String issuer = "CN=Le CA";
-		Date dateOfIssue = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000); // yesterday
-	    Date dateOfExpiry = new Date(System.currentTimeMillis() + 2 * 365 * 24 * 60 * 60 * 1000);// 2 years
+		Date dateOfIssue = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000)); // yesterday
+	    Date dateOfExpiry = new Date(System.currentTimeMillis() + (365l * 24l * 60l * 60l * 1000l));// 1 year
 	    
 	    try {
 	    	//generate key (RSA)

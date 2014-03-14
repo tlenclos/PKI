@@ -7,7 +7,7 @@
     <jsp:body>
     <h2>Create certificate</h2>
     
-	<form method="post" action="/PKI/secure/verify/" enctype="multipart/form-data">
+	<form method="post" action="/PKI/secure/verify" enctype="multipart/form-data">
         <div class="form-group">
 	        <label for="certificate">Certificate</label>
 	        <input type="file" name="file" />

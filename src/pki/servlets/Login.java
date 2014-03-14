@@ -8,13 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.tomcat.jni.File;
+
 import pki.Config;
 import pki.Database;
 import pki.User;
 
 @WebServlet("/login")
 public class Login extends javax.servlet.http.HttpServlet {
-
+	
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/login.jsp";
 	private static final String FIELD_EMAIL = "email";
@@ -25,7 +27,10 @@ public class Login extends javax.servlet.http.HttpServlet {
 			throws ServletException, IOException 
 	{
 		HttpSession session = request.getSession();
-
+		
+		System.out.println(request.getRealPath("/"));
+		
+		
 		String method = request.getMethod();
 		if (method.equals("POST")) {
 			User tryLoginUser = Database.loginUser(request.getParameter(FIELD_EMAIL), request.getParameter(FIELD_PASSWORD));

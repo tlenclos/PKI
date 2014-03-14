@@ -23,6 +23,8 @@ import org.bouncycastle.asn1.x509.DistributionPoint;
 import org.bouncycastle.asn1.x509.DistributionPointName;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
+import org.bouncycastle.asn1.x509.GeneralNames;
+import org.bouncycastle.asn1.x509.IssuingDistributionPoint;
 import org.bouncycastle.asn1.x509.ReasonFlags;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x509.X509Name;
@@ -30,7 +32,6 @@ import org.bouncycastle.cert.X509v2CRLBuilder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 
 import pki.entities.CRLEntry;
-import sun.security.x509.GeneralNames;
 
 public class CertificateGenerator
 {	
@@ -70,12 +71,13 @@ public class CertificateGenerator
 			X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(issuerCN), serialNumber, notBefore, notAfter, new X500Name(subjectName), SubjectPublicKeyInfo.getInstance(keys.getPublic().getEncoded()));
 			if (selfSigned)
 			{
-				DEROctetString oct = new DEROctetString("http://localhost:8080/crl.crl".getBytes());
-		        DistributionPointName name = new DistributionPointName(4, oct);
-		        GeneralName gn = new GeneralName(new X500Name(issuerCN));
-		        DistributionPoint point = new DistributionPoint(name,null,new org.bouncycastle.asn1.x509.GeneralNames(gn));
-		        
-		        certBuilder.addExtension(Extension.cRLDistributionPoints, false, new CRLDistPoint(new DistributionPoint[] { point }));
+				GeneralName generalName = new GeneralName(GeneralName.uniformResourceIdentifier,"http://localhost:8080/PKI/crl.crl");
+				GeneralNames generalNames = new GeneralNames(generalName);
+				DistributionPointName distPointOne = new DistributionPointName(generalNames);
+				
+				DistributionPoint[] distPoints = new DistributionPoint[] { new DistributionPoint(distPointOne,null,null) };
+				 
+				certBuilder.addExtension(Extension.cRLDistributionPoints, false, new CRLDistPoint(distPoints));
 				
 			}
 			byte[] certBytes = certBuilder.build(new JCESigner(privateKey, signatureAlgorithm)).getEncoded();

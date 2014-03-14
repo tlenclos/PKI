@@ -89,7 +89,7 @@ public class CertificatesEdit extends javax.servlet.http.HttpServlet {
 	            Blob blob = rs.getBlob("certificate");
 	            byte[] certBytes = blob.getBytes(1, (int) blob.length());
 	            
-	            String filename = "certificate.pem";
+	            String filename = "certificate.cert";
 	            response.setContentType("APPLICATION/OCTET-STREAM");
 	            response.setHeader("Content-Disposition","attachment; filename=\"" + filename + "\"");
 	            

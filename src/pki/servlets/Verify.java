@@ -2,10 +2,7 @@ package pki.servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.cert.X509Certificate;
-import java.sql.Blob;
-import java.sql.ResultSet;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,24 +14,15 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.IOUtils;
 
-import pki.Certificate;
 import pki.Config;
-import pki.Database;
-import pki.User;
 import pki.entities.CA;
-import pki.entities.RA;
 import pki.utilities.CertificateReaders;
-import pki.utilities.CertificateWriters;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
 
 @WebServlet("/secure/verify")
 public class Verify extends javax.servlet.http.HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String VIEW = "/secure/certificates-edit.jsp";
+	private static final String VIEW = "/secure/verify.jsp";
 	
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
