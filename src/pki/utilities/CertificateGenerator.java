@@ -25,6 +25,7 @@ import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.ReasonFlags;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.asn1.x509.X509Name;
 import org.bouncycastle.cert.X509v2CRLBuilder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 
@@ -62,17 +63,17 @@ public class CertificateGenerator
 		BigInteger serialNumber = BigInteger.valueOf(System.currentTimeMillis());
 		
 	    try {
-		    
-	    	String issuerCN = issuerCertificate != null ? issuerCertificate.getSubjectX500Principal().getName() : subjectName; 
+		    boolean selfSigned = issuerCertificate == null;
+	    	String issuerCN = !selfSigned ? issuerCertificate.getSubjectX500Principal().getName() : subjectName; 
 		    PrivateKey privateKey = issuerPrivateKey != null ? issuerPrivateKey : keys.getPrivate();
 	    	// build
 			X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(issuerCN), serialNumber, notBefore, notAfter, new X500Name(subjectName), SubjectPublicKeyInfo.getInstance(keys.getPublic().getEncoded()));
-			if (issuerPrivateKey != null)
+			if (selfSigned)
 			{
 				DEROctetString oct = new DEROctetString("http://localhost:8080/crl.crl".getBytes());
 		        DistributionPointName name = new DistributionPointName(4, oct);
-		        
-		        DistributionPoint point = new DistributionPoint(name,null,null);
+		        GeneralName gn = new GeneralName(new X500Name(issuerCN));
+		        DistributionPoint point = new DistributionPoint(name,null,new org.bouncycastle.asn1.x509.GeneralNames(gn));
 		        
 		        certBuilder.addExtension(Extension.cRLDistributionPoints, false, new CRLDistPoint(new DistributionPoint[] { point }));
 				
