@@ -22,13 +22,19 @@
 	      	<c:if test="${not empty userSession}">
 	      		<li><a href="/PKI/secure/certificates">Certificates</a></li>
 	      		<li><a href="/PKI/secure/verify">Verify</a></li>
-	    		<li><a href="/PKI/login?disconnect">Logout</a></li>
 			</c:if>
 			<c:if test="${empty userSession}">
 		        <li><a href="/PKI/register">Register</a></li>
 		        <li><a href="/PKI/login">Login</a></li>
 			</c:if>
 	      </ul>
+	      
+	      <c:if test="${not empty userSession}">
+		      <ul class="nav navbar-nav navbar-right">
+		      	<li><a href="">Hello, <strong><c:out value="${ userSession.firstname }"/> <c:out value="${ userSession.lastname }"/></strong></a></li>
+		        <li><a href="/PKI/login?disconnect">Logout</a></li>
+		      </ul>
+	      </c:if>
 	      
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
