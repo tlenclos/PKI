@@ -18,6 +18,7 @@ import java.util.Date;
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.CRLDistPoint;
 import org.bouncycastle.asn1.x509.DistributionPoint;
 import org.bouncycastle.asn1.x509.DistributionPointName;
@@ -70,6 +71,17 @@ public class CertificateGenerator
 	    	// build
 			X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(issuerCN), serialNumber, notBefore, notAfter, new X500Name(subjectName), SubjectPublicKeyInfo.getInstance(keys.getPublic().getEncoded()));
 			if (selfSigned)
+			{
+				GeneralName generalName = new GeneralName(GeneralName.uniformResourceIdentifier,"http://localhost:8080/PKI/crl.crl");
+				GeneralNames generalNames = new GeneralNames(generalName);
+				DistributionPointName distPointOne = new DistributionPointName(generalNames);
+				
+				DistributionPoint[] distPoints = new DistributionPoint[] { new DistributionPoint(distPointOne,null,null) };
+				 
+				certBuilder.addExtension(Extension.cRLDistributionPoints, false, new CRLDistPoint(distPoints));
+				certBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
+			}
+			else
 			{
 				GeneralName generalName = new GeneralName(GeneralName.uniformResourceIdentifier,"http://localhost:8080/PKI/crl.crl");
 				GeneralNames generalNames = new GeneralNames(generalName);

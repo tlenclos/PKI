@@ -136,7 +136,7 @@ public class CA
 			if (crl == null)
 				return true;
 
-			return crl.isRevoked(certificate);
+			return !crl.isRevoked(certificate);
 		}
 		catch(Exception e)
 		{
